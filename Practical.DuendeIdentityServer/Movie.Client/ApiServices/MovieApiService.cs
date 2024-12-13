@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using IdentityModel.Client;
 
 namespace Movies.Client.ApiServices
 {
@@ -25,15 +25,12 @@ namespace Movies.Client.ApiServices
 
         public async Task<IEnumerable<Movie>> GetMovies()
         {
-
             ////////////////////////
             // WAY 1 :
-
             var httpClient = _httpClientFactory.CreateClient("MovieAPIClient");
-
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                "/movies");
+                "/api/movies");
 
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
@@ -41,8 +38,7 @@ namespace Movies.Client.ApiServices
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var movieList = JsonConvert.DeserializeObject<List<Movie>>(content);
-            return movieList;
+            return JsonConvert.DeserializeObject<List<Movie>>(content);
 
             ////////////////////////// //////////////////////// ////////////////////////
             //// WAY 2 :
@@ -51,7 +47,6 @@ namespace Movies.Client.ApiServices
             //var apiClientCredentials = new ClientCredentialsTokenRequest
             //{
             //    Address = "https://localhost:5005/connect/token",
-
             //    ClientId = "movieClient",
             //    ClientSecret = "secret",
 
@@ -59,39 +54,25 @@ namespace Movies.Client.ApiServices
             //    Scope = "movieAPI"
             //};
 
-            //// creates a new HttpClient to talk to our IdentityServer (localhost:5005)
+            // creates a new HttpClient to talk to our IdentityServer (localhost:5005)
             //var client = new HttpClient();
 
-            //// just checks if we can reach the Discovery document. Not 100% needed but..
-            //var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5005");
-            //if (disco.IsError)
-            //{
-            //    return null; // throw 500 error
-            //}
-
-            //// 2. Authenticates and get an access token from Identity Server
-            //var tokenResponse = await client.RequestClientCredentialsTokenAsync(apiClientCredentials);            
+            //var tokenResponse = await client.RequestClientCredentialsTokenAsync(apiClientCredentials);
             //if (tokenResponse.IsError)
             //{
             //    return null;
             //}
 
-            //// Another HttpClient for talking now with our Protected API
             //var apiClient = new HttpClient();
 
-            //// 3. Set the access_token in the request Authorization: Bearer <token>
             //client.SetBearerToken(tokenResponse.AccessToken);
 
-            //// 4. Send a request to our Protected API
+            ////// 4. Send a request to our Protected API
             //var response = await client.GetAsync("https://localhost:5001/api/movies");
             //response.EnsureSuccessStatusCode();
-
             //var content = await response.Content.ReadAsStringAsync();
-
             //var movieList = JsonConvert.DeserializeObject<List<Movie>>(content);
             //return movieList;
-
-
         }
 
         public Task<Movie> GetMovie(string id)

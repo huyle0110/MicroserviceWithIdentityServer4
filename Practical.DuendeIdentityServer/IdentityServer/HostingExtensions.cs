@@ -13,10 +13,11 @@ internal static class HostingExtensions
                 // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
                 options.EmitStaticAudienceClaim = true;
             })
-            .AddInMemoryIdentityResources(Config.IdentityResources)
+            .AddInMemoryClients(Config.Clients)
             .AddInMemoryApiScopes(Config.ApiScopes)
+            .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddTestUsers(TestUsers.Users)
-            .AddInMemoryClients(Config.Clients);
+            .AddDeveloperSigningCredential();
 
         builder.Services.AddAuthorization();
 

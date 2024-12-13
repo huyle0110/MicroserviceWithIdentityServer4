@@ -9,7 +9,13 @@ public static class Config
         new IdentityResource[]
         { 
             new IdentityResources.OpenId(),
-            new IdentityResources.Profile()
+            new IdentityResources.Profile(),
+            new IdentityResources.Address(),
+            new IdentityResources.Email(),
+            new IdentityResource("roles", "Your role(s)", new List<string>()
+            {
+                "role"
+            })
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -31,7 +37,7 @@ public static class Config
                         },
                         AllowedScopes = { "movieAPI" }
                    },
-                    new Client
+                new Client
                    {
                        ClientId = "movies_mvc_client",
                        ClientName = "Movies MVC Web App",
