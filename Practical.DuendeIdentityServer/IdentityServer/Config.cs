@@ -21,7 +21,8 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
             { 
-               new ApiScope("movieAPI", "Movie API")
+               new ApiScope("movieAPI", "Movie API"),
+               new ApiScope("movieAPI2", "Movie API 2")
             };
 
     public static IEnumerable<Client> Clients =>
@@ -63,6 +64,35 @@ public static class Config
                            IdentityServerConstants.StandardScopes.Address,
                            IdentityServerConstants.StandardScopes.Email,
                            "movieAPI",
+                           "roles"
+                       }
+                   },
+                new Client
+                   {
+                       ClientId = "movies_mvc_client2",
+                       ClientName = "Movies MVC Web App 2",
+                       AllowedGrantTypes = GrantTypes.Hybrid,
+                       RequirePkce = false,
+                       AllowRememberConsent = false,
+                       RedirectUris = new List<string>()
+                       {
+                           "https://localhost:5003/signin-oidc"
+                       },
+                       PostLogoutRedirectUris = new List<string>()
+                       {
+                           "https://localhost:5003/signout-callback-oidc"
+                       },
+                       ClientSecrets = new List<Secret>
+                       {
+                           new Secret("secret".Sha256())
+                       },
+                       AllowedScopes = new List<string>
+                       {
+                           IdentityServerConstants.StandardScopes.OpenId,
+                           IdentityServerConstants.StandardScopes.Profile,
+                           IdentityServerConstants.StandardScopes.Address,
+                           IdentityServerConstants.StandardScopes.Email,
+                           "movieAPI2",
                            "roles"
                        }
                    }
